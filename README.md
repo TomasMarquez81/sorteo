@@ -1,55 +1,51 @@
-###sorteo
-Descripción
-Una sencilla aplicación web para realizar sorteos aleatorios. Probablemente permite seleccionar un ganador entre participantes, usando una interfaz basada en HTML, CSS y JavaScript.
+# sorteo
 
-Estructura del proyecto
-index.html: Archivo principal que define la interfaz de usuario.
+**Descripción:** Una sencilla aplicación web para realizar sorteos aleatorios. Probablemente permite seleccionar un ganador entre participantes, usando una interfaz basada en HTML, CSS y JavaScript.
 
-indexenbruto.html: Versión cruda o sin compilar del archivo HTML.
+## Estructura del proyecto
 
-script o script.js: Contiene la lógica del sorteo en JavaScript.
+* `index.html`: Archivo principal que define la interfaz de usuario.
+* `indexenbruto.html`: Versión cruda o sin compilar del archivo HTML.
+* `script` o `script.js`: Contiene la lógica del sorteo en JavaScript.
+* `style` o `style.css`: Define los estilos visuales de la página.
+* `package.json`: Lista dependencias y scripts del proyecto (npm).
 
-style o style.css: Define los estilos visuales de la página.
+## Características (estimadas)
 
-package.json: Lista dependencias y scripts del proyecto (npm).
+* Captura los nombres de los participantes.
+* Genera un ganador de forma aleatoria.
+* Interfaz sencilla y responsiva.
 
-Características (estimadas)
-Captura los nombres de los participantes.
+## Cómo usar
 
-Genera un ganador de forma aleatoria.
+### Clona el repositorio
 
-Interfaz sencilla y responsiva.
-
-Cómo usar
-bash
-Copiar
-Editar
-# Clona el repositorio
+```bash
 git clone https://github.com/TomasMarquez81/sorteo.git
 cd sorteo
-Opción A: Usar directamente la web
-Abre index.html (o indexenbruto.html) en tu navegador y listo.
+```
 
-Opción B: Instalar dependencias y ejecutar localmente
-bash
-Copiar
-Editar
+### Opción A: Usar directamente la web
+
+Abre `index.html` (o `indexenbruto.html`) en tu navegador y listo.
+
+### Opción B: Instalar dependencias y ejecutar localmente
+
+```bash
 npm install
-npm start   # O el comando definido en package.json
-Tecnologías
-HTML
+npm start # O el comando definido en package.json
+```
 
-CSS
+## Tecnologías
 
-JavaScript
+* HTML
+* CSS
+* JavaScript
+* Posiblemente Node.js y npm (según `package.json`)
 
-Posiblemente Node.js y npm (según package.json)
+## ¿Cómo contribuir?
 
-¿Cómo contribuir?
-Haz un fork del repositorio.
-
-Crea una rama para tu característica o corrección.
-
-Añade tus cambios.
-
-Envía un pull request describiendo tu aporte.
+1. Haz un fork del repositorio.
+2. Crea una rama para tu característica o corrección.
+3. Añade tus cambios.
+4. Envía un pull request describiendo tu aporte.
