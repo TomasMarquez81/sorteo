@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aplicación de Sorteos</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link rel="stylesheet" href="./style/style.css">
+</head>
+<body>
+    <div class="container stack">
+        <div class="panel app-header">
+            <div class="logo" id="app-logo" aria-label="logo">
+                <!-- Reemplazable por imagen subida -->
+                <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                </svg>
+            </div>
+            <h1 id="app-title">Aplicación de Sorteos</h1>
+            <p id="app-subtitle">Sube tu lista de participantes y configura el sorteo para empezar.</p>
+        </div>
+
+        <!-- Configuración del sorteo -->
+        <div class="panel" id="config-panel">
+            <h2>Configuración del sorteo</h2>
+            <div class="form-grid full" style="margin-top:8px">
+                <div class="field">
+                    <label for="participants-file">1. Cargar archivo (.txt o .csv: Nombre,Participaciones)</label>
+                    <input type="file" id="participants-file" accept=".txt,.csv" />
+                    <span class="helper">Ejemplo: <code>María,3</code></span>
+                </div>
+            </div>
+            <div class="form-grid" style="margin-top:8px">
+                <div class="field">
+                    <label for="winners-count">2. Número de ganadores</label>
+                    <input type="number" id="winners-count" value="1" min="1" />
+                </div>
+                <div class="field">
+                    <label for="alternates-count">3. Número de suplentes</label>
+                    <input type="number" id="alternates-count" value="1" min="0" />
+                </div>
+            </div>
+            <div class="buttons" style="margin-top:12px">
+                <button id="draw-button" class="button" disabled>¡Realizar sorteo!</button>
+                <button id="clear-button" class="button ghost" title="Limpiar datos">Limpiar</button>
+            </div>
+        </div>
+
+        <!-- Animación y estado -->
+        <div class="panel" id="main-draw-panel">
+            <div id="status-text"></div>
+            <div id="animation-area">
+                <div id="roulette">Preparando...</div>
+            </div>
+        </div>
+
+        <!-- Resultados -->
+        <div class="panel" id="results-panel">
+            <div id="results-image">
+                <div id="cloned-logo-container" style="display:none; text-align:center; margin-bottom: 12px;"></div>
+                <h2 id="results-title">🏆 ¡Resultados del Sorteo! ✨</h2>
+                <div class="results-grid">
+                    <div id="winners-list-container"></div>
+                    <div id="alternates-list-container"></div>
+                </div>
+            </div>
+            <div class="buttons" style="margin-top:16px">
+                <button id="download-button" class="button">Descargar imagen</button>
+                <button id="restart-button" class="button ghost">Nuevo sorteo</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toggle y Drawer de configuración de marca/tema -->
+    <button class="button config-toggle" id="open-config"><span>⚙️</span> Configurar</button>
+    <aside class="drawer" id="config-drawer" aria-hidden="true">
+        <header>
+            <h3>Configuración de marca & tema</h3>
+            <p class="helper">Los cambios se guardan en <b>localStorage</b> (JSON). Puedes exportar/importar.</p>
+        </header>
+        <main>
+            <section>
+                <h2>Identidad</h2>
+                <div class="form-grid">
+                    <div class="field">
+                        <label for="title-input">Título</label>
+                        <input type="text" id="title-input" placeholder="Aplicación de Sorteos" />
+                    </div>
+                    <div class="field">
+                        <label for="subtitle-input">Subtítulo</label>
+                        <input type="text" id="subtitle-input" placeholder="Sube tu lista de participantes..." />
+                    </div>
+                </div>
+                <div class="form-grid full" style="margin-top:8px">
+                    <div class="field">
+                        <label for="logo-input">Logo (PNG/JPG/SVG)</label>
+                        <input type="file" id="logo-input" accept="image/*" />
+                        <span class="helper">Se incrusta como Data URL y se incluye en la exportación JSON.</span>
+                    </div>
+                </div>
+            </section>
+            <div class="divider"></div>
+            <section>
+                <h2>Colores</h2>
+                <div class="form-grid">
+                    <div class="field"><label>Fondo (oscuro)</label><input type="color" id="c-bg-dark"></div>
+                    <div class="field"><label>Panel</label><input type="color" id="c-bg-panel"></div>
+                    <div class="field"><label>Borde/Primario</label><input type="color" id="c-border"></div>
+                    <div class="field"><label>Texto claro</label><input type="color" id="c-text-light"></div>
+                    <div class="field"><label>Texto acento</label><input type="color" id="c-text-accent"></div>
+                    <div class="field"><label>Gradiente A</label><input type="color" id="c-grad-a"></div>
+                    <div class="field"><label>Gradiente B</label><input type="color" id="c-grad-b"></div>
+                </div>
+            </section>
+            <div class="divider"></div>
+            <section>
+                <h2>Apariencia</h2>
+                <div class="form-grid">
+                    <div class="field">
+                        <label for="radius-input">Radio esquinas (px)</label>
+                        <input type="number" id="radius-input" min="0" max="32" step="1" />
+                    </div>
+                    <div class="field">
+                        <label for="font-select">Fuente</label>
+                        <select id="font-select">
+                            <option value='"Segoe UI", Tahoma, Geneva, Verdana, sans-serif'>Sistema</option>
+                            <option
+                                value='Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial, "Apple Color Emoji", "Segoe UI Emoji"'>
+                                Inter (fallback)</option>
+                            <option value='"Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif'>Gill Sans
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+            <div class="divider"></div>
+            <section>
+                <h2>Preferencias</h2>
+                <div class="form-grid full">
+                    <div class="field">
+                        <label><input type="checkbox" id="show-animation" /> Mostrar animación de ruleta</label>
+                    </div>
+                    <div class="field">
+                        <label><input type="checkbox" id="show-logo-in-result" /> Mostrar logo en la imagen de
+                            resultados</label>
+                    </div>
+                    <div class="field">
+                        <label><input type="checkbox" id="weighted-by-tickets" checked /> Selección ponderada por
+                            participaciones</label>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <footer>
+            <div class="buttons">
+                <button id="save-config" class="button">Guardar</button>
+                <button id="reset-config" class="button ghost">Restablecer</button>
+            </div>
+            <div class="buttons" style="margin-top:8px">
+                <button id="export-config" class="button ghost">Exportar JSON</button>
+                <label class="button ghost" style="cursor:pointer; text-align:center">
+                    Importar JSON
+                    <input id="import-config" type="file" accept="application/json" style="display:none" />
+                </label>
+            </div>
+        </footer>
+    </aside>
+
+    <script src="./scrpit/script.js">
+
+    </script>
+</body>
+</html>

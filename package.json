@@ -1,0 +1,10 @@
+{
+  "name": "WebAppSorteo",
+  "version": "1.0.0",
+  "main": "index.html",
+  "scripts": {
+  },
+  "author": "Tomás Márquez",
+  "license": "ISC",
+  "description": ""
+}
